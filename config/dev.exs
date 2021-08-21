@@ -5,7 +5,7 @@ config :hacobune_phx, HacobunePhx.Repo,
   username: "root",
   password: "",
   database: "hacobune_phx_dev",
-  hostname: "localhost",
+  hostname: "db",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
