@@ -6,6 +6,7 @@ defmodule HacobunePhx.Rooms.Room do
     field :description, :string
     field :name, :string
     belongs_to :user, HacobunePhx.Accounts.User
+    has_many :messages, HacobunePhx.Rooms.Message
 
     timestamps()
   end

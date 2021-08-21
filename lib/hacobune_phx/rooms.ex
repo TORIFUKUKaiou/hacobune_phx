@@ -7,6 +7,7 @@ defmodule HacobunePhx.Rooms do
   alias HacobunePhx.Repo
 
   alias HacobunePhx.Rooms.Room
+  alias HacobunePhx.Rooms.Message
 
   @doc """
   Returns the list of rooms.
@@ -100,5 +101,21 @@ defmodule HacobunePhx.Rooms do
   """
   def change_room(%Room{} = room, attrs \\ %{}) do
     Room.changeset(room, attrs)
+  end
+
+  def get_room_with_messages!(id) do
+    Room
+    |> preload(messages: :user)
+    |> Repo.get!(id)
+  end
+
+  def change_message(%Message{} = message, attrs \\ %{}) do
+    Message.changeset(message, attrs)
+  end
+
+  def create_message(attrs \\ %{}) do
+    %Message{}
+    |> Message.changeset(attrs)
+    |> Repo.insert()
   end
 end
