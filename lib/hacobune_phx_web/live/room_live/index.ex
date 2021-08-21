@@ -5,8 +5,13 @@ defmodule HacobunePhxWeb.RoomLive.Index do
   alias HacobunePhx.Rooms.Room
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :rooms, list_rooms())}
+  def mount(_params, session, socket) do
+    {:ok,
+     assign(socket,
+       rooms: list_rooms(),
+       user: HacobunePhx.Accounts.get_user_by_session_token(session["user_token"]),
+       session_id: session["live_socket_id"]
+     )}
   end
 
   @impl true
@@ -23,7 +28,7 @@ defmodule HacobunePhxWeb.RoomLive.Index do
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Room")
-    |> assign(:room, %Room{})
+    |> assign(:room, %Room{user_id: socket.assigns.user.id})
   end
 
   defp apply_action(socket, :index, _params) do
