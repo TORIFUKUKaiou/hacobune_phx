@@ -1,0 +1,17 @@
+{
+    "name": "Elixir & Node.js & MySQL",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "web",
+    "workspaceFolder": "/workspace",
+    "settings": {
+        "terminal.integrated.profiles.linux": {
+            "bash": {
+                "path": "/bin/bash",
+            }
+        }
+    },
+    "extensions": [
+        "jakebecker.elixir-ls",
+        "ms-azuretools.vscode-docker"
+    ]
+}
