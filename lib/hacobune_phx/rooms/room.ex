@@ -15,6 +15,6 @@ defmodule HacobunePhx.Rooms.Room do
   def changeset(room, attrs) do
     room
     |> cast(attrs, [:name, :description, :user_id])
-    |> validate_required([:name, :description])
+    |> validate_required([:name, :user_id])
   end
 end

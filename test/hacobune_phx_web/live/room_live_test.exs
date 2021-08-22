@@ -12,7 +12,8 @@ defmodule HacobunePhxWeb.RoomLiveTest do
   @invalid_attrs %{description: nil, name: nil}
 
   defp fixture(:room) do
-    {:ok, room} = Rooms.create_room(@create_attrs)
+    user = HacobunePhx.AccountsFixtures.user_fixture()
+    {:ok, room} = Rooms.create_room(@create_attrs |> Map.merge(%{user_id: user.id}))
     room
   end
 

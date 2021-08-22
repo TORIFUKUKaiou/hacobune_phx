@@ -3,9 +3,9 @@ defmodule HacobunePhx.Repo.Migrations.CreateMessages do
 
   def change do
     create table(:messages) do
-      add :body, :string
-      add :user_id, references(:users, on_delete: :nothing)
-      add :room_id, references(:rooms, on_delete: :nothing)
+      add :body, :string, null: false
+      add :user_id, references(:users, on_delete: :nothing), null: false
+      add :room_id, references(:rooms, on_delete: :nothing), null: false
 
       timestamps()
     end

@@ -11,9 +11,11 @@ defmodule HacobunePhx.RoomsTest do
     @invalid_attrs %{description: nil, name: nil}
 
     def room_fixture(attrs \\ %{}) do
+      user = HacobunePhx.AccountsFixtures.user_fixture()
+
       {:ok, room} =
         attrs
-        |> Enum.into(@valid_attrs)
+        |> Enum.into(@valid_attrs |> Map.merge(%{user_id: user.id}))
         |> Rooms.create_room()
 
       room
@@ -30,7 +32,11 @@ defmodule HacobunePhx.RoomsTest do
     end
 
     test "create_room/1 with valid data creates a room" do
-      assert {:ok, %Room{} = room} = Rooms.create_room(@valid_attrs)
+      user = HacobunePhx.AccountsFixtures.user_fixture()
+
+      assert {:ok, %Room{} = room} =
+               Rooms.create_room(@valid_attrs |> Map.merge(%{user_id: user.id}))
+
       assert room.description == "some description"
       assert room.name == "some name"
     end
