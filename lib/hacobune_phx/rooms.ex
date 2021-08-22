@@ -9,6 +9,10 @@ defmodule HacobunePhx.Rooms do
   alias HacobunePhx.Rooms.Room
   alias HacobunePhx.Rooms.Message
 
+  def subscribe(id) do
+    Phoenix.PubSub.subscribe(HacobunePhx.PubSub, topic(id))
+  end
+
   @doc """
   Returns the list of rooms.
 
@@ -119,10 +123,27 @@ defmodule HacobunePhx.Rooms do
          |> Repo.insert() do
       {:ok, message} ->
         message = HacobunePhx.Repo.preload(message, :user)
+
         {:ok, message}
+        |> broadcast(:message_created)
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:error, changeset}
+        |> broadcast(:message_created)
     end
   end
+
+  def broadcast({:ok, message}, event) do
+    Phoenix.PubSub.broadcast(
+      HacobunePhx.PubSub,
+      topic(message.room_id),
+      {event, message}
+    )
+
+    {:ok, message}
+  end
+
+  def broadcast({:error, _reason} = error, _event), do: error
+
+  defp topic(id), do: "rooms-#{id}"
 end

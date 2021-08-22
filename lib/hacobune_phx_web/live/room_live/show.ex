@@ -6,6 +6,8 @@ defmodule HacobunePhxWeb.RoomLive.Show do
 
   @impl true
   def mount(%{"id" => id}, session, socket) do
+    if connected?(socket), do: Rooms.subscribe(id)
+
     user = HacobunePhx.Accounts.get_user_by_session_token(session["user_token"])
     room = Rooms.get_room_with_messages!(id)
     changeset = Rooms.change_message(%Message{user_id: user.id, room_id: room.id})
@@ -24,13 +26,22 @@ defmodule HacobunePhxWeb.RoomLive.Show do
   def handle_event("save", %{"message" => message_params}, socket) do
     case Rooms.create_message(message_params) do
       {:ok, message} ->
-        {:noreply,
-         socket
-         |> update(:messages, fn messages -> [message | messages] end)}
+        changeset =
+          Rooms.change_message(%Message{user_id: message.user_id, room_id: message.room_id})
+
+        socket = assign(socket, changeset: changeset)
+        {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  @impl true
+  def handle_info({:message_created, message}, socket) do
+    socket = update(socket, :messages, fn messages -> [message | messages] end)
+
+    {:noreply, socket}
   end
 
   defp page_title(:show), do: "Show Room"
