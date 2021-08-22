@@ -88,3 +88,23 @@
   display: block;
   margin: -1rem 0 2rem;
 }
+
+.messages {
+  height: 350px;
+  overflow: scroll;
+}
+
+.chatroom {
+  width: 900px;
+}
+
+.chat-content {
+  display: inline-block;
+  width: 600px;
+}
+
+.members {
+  display: inline-block;
+  float: right;
+  width: 200px;
+}

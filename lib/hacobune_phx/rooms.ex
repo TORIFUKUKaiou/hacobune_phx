@@ -114,8 +114,15 @@ defmodule HacobunePhx.Rooms do
   end
 
   def create_message(attrs \\ %{}) do
-    %Message{}
-    |> Message.changeset(attrs)
-    |> Repo.insert()
+    case %Message{}
+         |> Message.changeset(attrs)
+         |> Repo.insert() do
+      {:ok, message} ->
+        message = HacobunePhx.Repo.preload(message, :user)
+        {:ok, message}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error, changeset}
+    end
   end
 end

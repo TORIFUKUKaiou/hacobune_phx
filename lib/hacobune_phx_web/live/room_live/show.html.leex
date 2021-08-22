@@ -1,37 +1,33 @@
-<ul>
-  <li>
-    <strong>Name:</strong>
-    <%= @room.name %>
-  </li>
+<div class="chatroom">
+  <div class="chat-content">
+    <div class="list-group">
+      <div class="list-group-item active">
+        <h2><%= @room.name %></h2>
+        <p><%= @room.description %></p>
+      </div>
+      <div id="messages" class="list-group-item messages" phx-update="append" phx-hook="RoomMessages">
+        <%= for message <- @messages do %>
+          <div id="message-<%= message.id %>">
+            <strong><%= message.user.email %>: </strong><%= message.body %>
+          </div>
+        <% end %>
+      </div>
+    </div>
 
-  <li>
-    <strong>Description:</strong>
-    <%= @room.description %>
-  </li>
-  <table>
-    <tbody id="messages">
-      <%= for message <- @messages do %>
-        <tr id="message-<%= message.id %>">
-          <td><%= message.body %></td>
-          <td><%= message.user.email %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <div>
-    <%= f = form_for @changeset, "#",
-      id: "board-form",
-      phx_submit: "save" %>
+    <div class="form-group">
+      <%= f = form_for @changeset, "#",
+        id: "board-form",
+        phx_submit: "save" %>
 
-      <%= textarea f, :body, class: "form-control" %>
-      <%= error_tag f, :body %>
+        <%= textarea f, :body, class: "form-control" %>
+        <%= error_tag f, :body %>
 
-      <%= hidden_input f, :user_id %>
-      <%= hidden_input f, :room_id %>
+        <%= hidden_input f, :user_id %>
+        <%= hidden_input f, :room_id %>
 
-      <%= submit "Save", phx_disable_with: "Saving..." %>
-    </form>
+        <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
   </div>
-</ul>
+</div>
 
 <span><%= live_redirect "Back", to: Routes.room_index_path(@socket, :index) %></span>
